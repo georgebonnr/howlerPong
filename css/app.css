@@ -1,0 +1,48 @@
+/*@font-face {
+  font-family: 'black_family'
+  src: url('./fonts/sf_archery_black-webfont.eot');
+  src: url('./fonts/sf_archery_black-webfont.eot') format('embedded-opentype');
+  font-weight: normal;
+  font-style: normal;
+}*/
+
+
+html {
+    background-color: #000;
+    color: #fff;
+} 
+
+.paddle {
+  background-color: white;
+}
+
+.ball {
+  background-color: white;
+  border-radius: 13px;
+}
+
+.board {
+  border: 2px solid white;
+}
+
+body {
+  font-family: 'new rocker', cursive;
+}
+
+.info {
+  color: white;
+}
+
+.title, .subTitle {
+  font-weight: 800;
+  font-size: 64px;
+}
+
+.subTitle {
+  font-size: 48px;
+}
+
+.score {
+  font-weight: 800;
+  font-size: 48px;
+}
