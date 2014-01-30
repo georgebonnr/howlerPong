@@ -2,10 +2,15 @@
   "name": "howler-pong",
   "description": "voice controlled pong",
   "version": "0.0.1",
+  "main": "app.js",
   "engines": {
     "node": "0.10.x"
   },
   "dependencies": {
-    "express": "3.x"
+    "express": "~3.4.8",
+    "logfmt": "~0.20.0"
+  },
+  "scripts": {
+    "start": "node app.js"
   }
 }
