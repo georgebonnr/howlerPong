@@ -48,20 +48,19 @@ Famous(function(require, exports, module) {
 
   var subTitleMod = new Modifier({
     origin: [0.5,0.5],
-    transform: FM.translate(titleX+20,window.innerHeight*0.4,0)
+    transform: FM.translate(titleX,window.innerHeight*0.35,0)
   });
 
   var scoreMod1 = new Modifier({
-    transform: FM.translate(window.innerWidth*0.66,window.innerHeight*0.2,0)
+    transform: FM.translate(window.innerWidth*0.66,window.innerHeight*0.25,0)
   });
 
   var scoreMod2 = new Modifier({
-    transform: FM.translate(window.innerWidth*0.66,window.innerHeight*0.5,0)
+    transform: FM.translate(window.innerWidth*0.66,window.innerHeight*0.55,0)
   });
 
   var pScore = '0';
   var cScore = '0';
-
   var playerScore = new Surface({
     size: [undefined, 200],
     content: pScore,
@@ -90,10 +89,10 @@ Famous(function(require, exports, module) {
   };
 
   var contextClass = (window.AudioContext ||
-      window.webkitAudioContext ||
-      window.mozAudioContext ||
-      window.oAudioContext ||
-      window.msAudioContext);
+    window.webkitAudioContext ||
+    window.mozAudioContext ||
+    window.oAudioContext ||
+    window.msAudioContext);
 
   if (contextClass) {
     var aContext = new contextClass();
@@ -109,10 +108,18 @@ Famous(function(require, exports, module) {
   filters.connect(pA);
 
   var streamLoaded = function(stream) {
+    titleY = window.innerHeight * 0.01;
+    titleMod.setTransform(FM.translate(titleX,titleY,0));
+    subTitle.setContent('setting audio threshold...');
+    subTitleMod.setTransform(FM.translate(titleX-40,window.innerHeight*0.3,0));
+    scoreMod1.setTransform(FM.translate(window.innerWidth*0.66,window.innerHeight*0.2,0));
+    scoreMod2.setTransform(FM.translate(window.innerWidth*0.66,window.innerHeight*0.5,0));
+
     mic = aContext.createMediaStreamSource(stream);
     mic.connect(filters.first);
-    subTitle.setContent('setting audio threshold...');
+    
     pA.calibrate(4000, 10, function(){
+      subTitleMod.setTransform(FM.translate(titleX+30,window.innerHeight*0.3,0));
       subTitle.setContent('Use your voice!');
     });
   };
@@ -124,14 +131,14 @@ Famous(function(require, exports, module) {
   var ball = new Ball(200, 300);
 
   var update = function (pitch) {
-      player.update(pitch);
-      computer.update(ball);
-      ball.update(player.paddle, computer.paddle);
+    player.update(pitch);
+    computer.update(ball);
+    ball.update(player.paddle, computer.paddle);
   };
 
   var step = function () {
-      var pitch = pA.process();
-      update(pitch);
+    var pitch = pA.process();
+    update(pitch);
   };
 
   Engine.on('prerender', function() {
@@ -139,68 +146,68 @@ Famous(function(require, exports, module) {
   });
 
   function Paddle(x, y, width, height) {
-      this.mod = new Modifier({
-        transform: FM.translate(x, y, 0)
-      });
-      this.surface = new Surface({
-        size: [width, height],
-        classes: ['paddle']
-      });
-      Context.add(this.mod).link(this.surface);
-      this.x = x;
-      this.y = y;
-      this.width = width;
-      this.height = height;
-      this.x_speed = 0;
-      this.y_speed = 0;
+    this.mod = new Modifier({
+      transform: FM.translate(x, y, 0)
+    });
+    this.surface = new Surface({
+      size: [width, height],
+      classes: ['paddle']
+    });
+    Context.add(this.mod).link(this.surface);
+    this.x = x;
+    this.y = y;
+    this.width = width;
+    this.height = height;
+    this.x_speed = 0;
+    this.y_speed = 0;
   }
 
   Paddle.prototype.move = function (x, y) {
-      this.x += x;
-      this.y += y;
-      this.x_speed = x;
-      this.y_speed = y;
-      if (this.x < 0) {
-          this.x = 0;
-          this.x_speed = 0;
-      } else if (this.x + this.width > 400) {
-          this.x = 400 - this.width;
-          this.x_speed = 0;
-      }
-      this.mod.setTransform(FM.translate(this.x, this.y, 0));
+    this.x += x;
+    this.y += y;
+    this.x_speed = x;
+    this.y_speed = y;
+    if (this.x < 0) {
+        this.x = 0;
+        this.x_speed = 0;
+    } else if (this.x + this.width > 400) {
+        this.x = 400 - this.width;
+        this.x_speed = 0;
+    }
+    this.mod.setTransform(FM.translate(this.x, this.y, 0));
   };
 
   function Computer() {
-      this.paddle = new Paddle(175, 10, 50, 10);
+    this.paddle = new Paddle(175, 10, 50, 10);
   }
 
   Computer.prototype.render = function () {
-      this.paddle.render();
+    this.paddle.render();
   };
 
   Computer.prototype.update = function (ball) {
-      var x_pos = ball.x;
-      var diff = -((this.paddle.x + (this.paddle.width / 2)) - x_pos);
-      if (diff < 0 && diff < -4) {
-          diff = -5;
-      } else if (diff > 0 && diff > 4) {
-          diff = 5;
-      }
-      this.paddle.move(diff, 0);
-      if (this.paddle.x < 0) {
-          this.paddle.x = 0;
-      } else if (this.paddle.x + this.paddle.width > 400) {
-          this.paddle.x = 400 - this.paddle.width;
-      }
+    var x_pos = ball.x;
+    var diff = -((this.paddle.x + (this.paddle.width / 2)) - x_pos);
+    if (diff < 0 && diff < -4) {
+        diff = -5;
+    } else if (diff > 0 && diff > 4) {
+        diff = 5;
+    }
+    this.paddle.move(diff, 0);
+    if (this.paddle.x < 0) {
+        this.paddle.x = 0;
+    } else if (this.paddle.x + this.paddle.width > 400) {
+        this.paddle.x = 400 - this.paddle.width;
+    }
   };
 
   function Player() {
-      this.paddle = new Paddle(175, 580, 50, 10);
-      this.last = 0;
+    this.paddle = new Paddle(175, 580, 50, 10);
+    this.last = 0;
   }
 
   Player.prototype.render = function () {
-      this.paddle.render();
+    this.paddle.render();
   };
 
   Player.prototype.update = function (pitch) {
@@ -225,73 +232,76 @@ Famous(function(require, exports, module) {
   };
 
   function Ball(x, y) {
-      this.x = x;
-      this.y = y;
+    this.x = x;
+    this.y = y;
 
-      this.mod = new Modifier({
-        transform: FM.translate(x, y, 0)
-      });
-      this.surface = new Surface({
-        size: [13, 13],
-        classes: ['ball']
-      });
-      Context.add(this.mod).link(this.surface);
+    this.mod = new Modifier({
+      transform: FM.translate(x, y, 0)
+    });
+    this.surface = new Surface({
+      size: [13, 13],
+      classes: ['ball']
+    });
+    Context.add(this.mod).link(this.surface);
 
-      this.x_speed = 0;
-      this.y_speed = 3;
+    this.x_speed = 0;
+    this.y_speed = 3;
   }
 
   Ball.prototype.update = function (paddle1, paddle2) {
-      this.x += this.x_speed;
-      this.y += this.y_speed;
-      var top_x = this.x - 5;
-      var top_y = this.y - 5;
-      var bottom_x = this.x + 5;
-      var bottom_y = this.y + 5;
+    this.x += this.x_speed;
+    this.y += this.y_speed;
+    var top_x = this.x - 5;
+    var top_y = this.y - 5;
+    var bottom_x = this.x + 5;
+    var bottom_y = this.y + 5;
 
-      if (this.x - 5 < 0) {
-          this.x = 5;
-          this.x_speed = -this.x_speed;
-      } else if (this.x + 5 > 400) {
-          this.x = 395;
-          this.x_speed = -this.x_speed;
-      }
+    if (this.x - 5 < 0) {
+      this.x = 5;
+      this.x_speed = -this.x_speed;
+    } else if (this.x + 5 > 400) {
+      this.x = 395;
+      this.x_speed = -this.x_speed;
+    }
 
-      if (this.y < 0) {
-          incrementScore('computer');
-          this.x_speed = 0;
-          this.y_speed = 3;
-          this.x = 200;
-          this.y = 300;
-      }
+    if (this.y < 0) {
+      incrementScore('computer');
+      this.x_speed = 0;
+      this.y_speed = 3;
+      this.x = 200;
+      this.y = 300;
+    }
 
-      if (this.y > 600) {
-          incrementScore('player');
-          this.x_speed = 0;
-          this.y_speed = 3;
-          this.x = 200;
-          this.y = 300;
-      }
+    if (this.y > 600) {
+      incrementScore('player');
+      this.x_speed = 0;
+      this.y_speed = 3;
+      this.x = 200;
+      this.y = 300;
+    }
 
-      if (top_y > 300) {
-          if (top_y < (paddle1.y + paddle1.height) && bottom_y > paddle1.y && top_x < (paddle1.x + paddle1.width) && bottom_x > paddle1.x) {
-              this.y_speed = -3;
-              this.x_speed += (paddle1.x_speed / 2);
-              this.y += this.y_speed;
-          }
-      } else {
-          if (top_y < (paddle2.y + paddle2.height) && bottom_y > paddle2.y && top_x < (paddle2.x + paddle2.width) && bottom_x > paddle2.x) {
-              this.y_speed = 3;
-              this.x_speed += (paddle2.x_speed / 2);
-              this.y += this.y_speed;
-          }
+    if (top_y > 300) {
+      if (top_y < (paddle1.y + paddle1.height) &&
+          bottom_y > paddle1.y &&
+          top_x < (paddle1.x + paddle1.width) &&
+          bottom_x > paddle1.x) {
+        this.y_speed = -3;
+        this.x_speed += (paddle1.x_speed / 2);
+        this.y += this.y_speed;
       }
-      this.mod.setTransform(FM.translate(this.x-7, this.y-5, 0));
+    } else {
+      if (top_y < (paddle2.y + paddle2.height) &&
+          bottom_y > paddle2.y &&
+          top_x < (paddle2.x + paddle2.width) &&
+          bottom_x > paddle2.x) {
+        this.y_speed = 3;
+        this.x_speed += (paddle2.x_speed / 2);
+        this.y += this.y_speed;
+      }
+    }
+    this.mod.setTransform(FM.translate(this.x-7, this.y-5, 0));
   };
 
   navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia;
   navigator.getUserMedia( {audio:true}, streamLoaded);
-
-
-
 });
