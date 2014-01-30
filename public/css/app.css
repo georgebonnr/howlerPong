@@ -38,6 +38,12 @@ body {
   font-size: 48px;
 }
 
+.small {
+  padding-left: 10px;
+  padding-top: 20px;
+  font-size: 24px;
+}
+
 a:link {
   text-decoration:none;
   color:white;

@@ -111,7 +111,7 @@ Famous(function(require, exports, module) {
     titleY = window.innerHeight * 0.01;
     titleMod.setTransform(FM.translate(titleX,titleY,0));
     subTitle.setContent('setting audio threshold...');
-    subTitleMod.setTransform(FM.translate(titleX-40,window.innerHeight*0.3,0));
+    subTitleMod.setTransform(FM.translate(titleX-50,window.innerHeight*0.3,0));
     scoreMod1.setTransform(FM.translate(window.innerWidth*0.66,window.innerHeight*0.2,0));
     scoreMod2.setTransform(FM.translate(window.innerWidth*0.66,window.innerHeight*0.5,0));
 
@@ -120,7 +120,7 @@ Famous(function(require, exports, module) {
     
     pA.calibrate(4000, 10, function(){
       subTitleMod.setTransform(FM.translate(titleX+30,window.innerHeight*0.3,0));
-      subTitle.setContent('Use your voice!');
+      subTitle.setContent("<div>Use your voice!</div><div class='small'>tip: make 'swooping' sounds</div>");
     });
   };
 
