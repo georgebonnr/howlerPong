@@ -1,16 +1,7 @@
-/*@font-face {
-  font-family: 'black_family'
-  src: url('./fonts/sf_archery_black-webfont.eot');
-  src: url('./fonts/sf_archery_black-webfont.eot') format('embedded-opentype');
-  font-weight: normal;
-  font-style: normal;
-}*/
-
-
 html {
     background-color: #000;
     color: #fff;
-} 
+}
 
 .paddle {
   background-color: white;
@@ -45,4 +36,22 @@ body {
 .score {
   font-weight: 800;
   font-size: 48px;
+}
+
+a:link {
+  text-decoration:none;
+  color:white;
+}
+a:visited {
+  text-decoration:none;
+  color:white;
+}
+a:hover {
+  text-decoration:none;
+  color:white;
+  cursor: pointer;
+}
+a:active {
+  text-decoration:none;
+  color:white;
 }
