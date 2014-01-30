@@ -42,13 +42,13 @@ Famous(function(require, exports, module) {
 
   var subTitle = new Surface({
     size: [undefined, 200],
-    content: 'Use your voice!',
+    content: "Click 'allow' above",
     classes: ['subTitle']
   });
 
   var subTitleMod = new Modifier({
     origin: [0.5,0.5],
-    transform: FM.translate(titleX+30,window.innerHeight*0.3,0)
+    transform: FM.translate(titleX+20,window.innerHeight*0.4,0)
   });
 
   var scoreMod1 = new Modifier({
@@ -106,12 +106,15 @@ Famous(function(require, exports, module) {
   var filters = gunther.makeNodeChain();
   filters.add(hiPass,loPass);
   var pA = gunther.makePitchAnalyser(filters);
-
   filters.connect(pA);
 
   var streamLoaded = function(stream) {
     mic = aContext.createMediaStreamSource(stream);
     mic.connect(filters.first);
+    subTitle.setContent('setting audio threshold...');
+    pA.calibrate(4000, 10, function(){
+      subTitle.setContent('Use your voice!');
+    });
   };
 
   var width = 400;
@@ -201,12 +204,12 @@ Famous(function(require, exports, module) {
   };
 
   Player.prototype.update = function (pitch) {
-    if (pitch.volume < -45 && pitch.hz > 200) {
+    if (pitch.volume < pA.threshold-20 && pitch.hz > 200) {
       this.paddle.move(0,0);
       this.last = pitch.hz;
       return;
     }
-    if (pitch.volume < -50) {
+    if (pitch.volume < pA.threshold) {
       this.paddle.move(0,0);
       this.last = pitch.hz;
       return;

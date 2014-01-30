@@ -12,7 +12,6 @@ module.exports = function(source) {
     console.log("adding noise cancelling filter at "+freq+
                 "hz with gain "+amt);
     source.disconnect(analyser);
-    console.log('_noiseCancel THIS',this);
     var filter = _gunther.makeFilter("PEAKING", freq, {
       gain: amt
     });
@@ -51,6 +50,7 @@ module.exports = function(source) {
     var start = new Date().getTime();
     var e = start + time;
     var results = [];
+      debugger;
     var tick = function() {
       analyser.getFloatFrequencyData(_FFT);
       var fftIndex = pitchHelpers.findMaxWithI(_FFT);
@@ -63,17 +63,19 @@ module.exports = function(source) {
       if (cur < e) {
         setTimeout(tick,interval);
       } else {
-        var data = pitchHelpers.getPeaks(results);
-        for (var f in data.freqs) {
-          var freq = data.freqs[f];
-          var freqAvg = freq.vol/freq.hits;
-          if (freq.hits > results.length*0.3) {
-            var diff = data.avg - freqAvg;
-            _noiseCancel(f,diff);
-          }
-        }
+        //// disabled noise cancelling
+        //
+        // var data = pitchHelpers.getPeaks(results);
+        // for (var f in data.freqs) {
+        //   var freq = data.freqs[f];
+        //   var freqAvg = freq.vol/freq.hits;
+        //   if (freq.hits > results.length*0.3) {
+        //     var diff = data.avg - freqAvg;
+        //     _noiseCancel(f,diff);
+        //   }
+        // }
         _setThresh(data.avg,tStrength);
-        done();
+        done && done();
       }
     };
     tick();
@@ -97,7 +99,7 @@ module.exports = function(source) {
       callback = tStrength;
       tStrength = undefined;
     }
-    this.smoothingTimeConstant = 0.9;
+    // this.smoothingTimeConstant = 0.9;
     time = time || 4000;
     tStrength = tStrength || 20;
     if (tStrength < 0 || tStrength > 50) {

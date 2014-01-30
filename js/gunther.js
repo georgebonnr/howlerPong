@@ -60,7 +60,6 @@ module.exports = makeFilter = function(type, freq, options) {
   if (!type || typeof type !== "string") {
     throw new Error("enter a string for filter type");
   }
-  console.log('THIS',this);
   var filter = this.context.createBiquadFilter();
   filter.type = filter[type];
   if (ar.isD(freq)) { filter.frequency.value = freq; }
@@ -124,7 +123,6 @@ module.exports = function(source) {
     console.log("adding noise cancelling filter at "+freq+
                 "hz with gain "+amt);
     source.disconnect(analyser);
-    console.log('_noiseCancel THIS',this);
     var filter = _gunther.makeFilter("PEAKING", freq, {
       gain: amt
     });
@@ -156,6 +154,7 @@ module.exports = function(source) {
       tStr *= 0.5;
     }
     analyser.threshold = avg+tStr;
+    console.log(analyser.threshold);
   };
 
   var _analyseEnv = function(time,tStrength,done) {
@@ -185,7 +184,7 @@ module.exports = function(source) {
           }
         }
         _setThresh(data.avg,tStrength);
-        done();
+        done && done();
       }
     };
     tick();
@@ -209,7 +208,6 @@ module.exports = function(source) {
       callback = tStrength;
       tStrength = undefined;
     }
-    this.smoothingTimeConstant = 0.9;
     time = time || 4000;
     tStrength = tStrength || 20;
     if (tStrength < 0 || tStrength > 50) {
