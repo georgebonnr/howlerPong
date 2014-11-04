@@ -303,5 +303,7 @@ Famous(function(require, exports, module) {
   };
 
   navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia;
-  navigator.getUserMedia( {audio:true}, streamLoaded);
+  navigator.getUserMedia( {audio:true}, streamLoaded, function(err) {
+    console.log("Error getting user media: " + err);
+  });
 });
