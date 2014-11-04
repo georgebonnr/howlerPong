@@ -36,7 +36,7 @@ Famous(function(require, exports, module) {
 
   var title = new Surface({
     size: [undefined, 200],
-    content: '<a href="https://github.com/georgebonnr/howlerPong" target="_blank">Howler Pong</a>',
+    content: '<a href="https://github.com/georgebonnr/howlerPong" target="_blank">Howler Pong Demo</a>',
     classes: ['title']
   });
 
