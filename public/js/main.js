@@ -120,7 +120,7 @@ Famous(function(require, exports, module) {
     
     pA.calibrate(4000, 10, function(){
       subTitleMod.setTransform(FM.translate(titleX+30,window.innerHeight*0.3,0));
-      subTitle.setContent("<div>Use your voice!</div><div class='small'>tip: make 'swooping' sounds</div>");
+      subTitle.setContent("<div>Use your voice!</div><div class='small'>hint: try 'swooping'</div>");
     });
   };
 
